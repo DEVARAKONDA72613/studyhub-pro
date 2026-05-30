@@ -1,5 +1,6 @@
 import { FiBookOpen } from "react-icons/fi";
 import { useState, useEffect } from "react";
+import AuthButton from "./AuthButton";
 
 function Navbar() {
   const [darkMode, setDarkMode] =
@@ -39,7 +40,8 @@ function Navbar() {
     <nav
       style={{
         padding: "20px 40px",
-        borderBottom: "1px solid var(--border)",
+        borderBottom:
+          "1px solid var(--border)",
         background: "var(--card-bg)",
         transition: "0.3s",
       }}
@@ -49,7 +51,8 @@ function Navbar() {
           maxWidth: "1200px",
           margin: "0 auto",
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent:
+            "space-between",
           alignItems: "center",
         }}
       >
@@ -61,7 +64,14 @@ function Navbar() {
           }}
         >
           <FiBookOpen size={24} />
-          <h2>StudyHub Pro</h2>
+
+          <h2
+            style={{
+              margin: 0,
+            }}
+          >
+            StudyHub Pro
+          </h2>
         </div>
 
         <div
@@ -71,9 +81,31 @@ function Navbar() {
             alignItems: "center",
           }}
         >
-          <span>Home</span>
-          <span>Library</span>
-          <span>Categories</span>
+          <span
+            style={{
+              cursor: "pointer",
+            }}
+          >
+            Home
+          </span>
+
+          <span
+            style={{
+              cursor: "pointer",
+            }}
+          >
+            Library
+          </span>
+
+          <span
+            style={{
+              cursor: "pointer",
+            }}
+          >
+            Categories
+          </span>
+
+          <AuthButton />
 
           <button
             onClick={toggleTheme}
@@ -83,9 +115,16 @@ function Navbar() {
               borderRadius: "12px",
               cursor: "pointer",
               fontSize: "18px",
+              background:
+                "var(--card-bg)",
+              color: "var(--text)",
+              border:
+                "1px solid var(--border)",
             }}
           >
-            {darkMode ? "☀️" : "🌙"}
+            {darkMode
+              ? "☀️"
+              : "🌙"}
           </button>
         </div>
       </div>
