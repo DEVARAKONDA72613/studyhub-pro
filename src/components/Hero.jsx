@@ -18,9 +18,9 @@ function Hero() {
           fontWeight: "bold",
         }}
       >
-        Your Digital
+        Study Smarter.
         <br />
-        Knowledge Space
+        Not Harder.
       </motion.h1>
 
       <motion.p
@@ -29,12 +29,13 @@ function Hero() {
         transition={{ delay: 0.3 }}
         style={{
           fontSize: "1.2rem",
-          color: "#6b7280",
+          color: "var(--text)",
+          opacity: 0.8,
           maxWidth: "600px",
         }}
       >
-        Store, search and organize your academic
-        resources in a clean Notion-inspired library.
+        Access notes, organize resources, and build your
+        personal learning hub.
       </motion.p>
     </section>
   );
