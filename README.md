@@ -24,14 +24,6 @@ npm install
 npm run dev
 ```
 
-## Future Enhancements
-
-* Dark Mode
-* Categories
-* MongoDB Integration
-* Authentication
-* Admin Dashboard
-* PDF Viewer
 
 ## Author
 
