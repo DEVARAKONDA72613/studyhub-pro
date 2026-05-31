@@ -3,12 +3,10 @@ import { useState, useEffect } from "react";
 import AuthButton from "./AuthButton";
 
 function Navbar() {
-  const [darkMode, setDarkMode] =
-    useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    const savedTheme =
-      localStorage.getItem("theme");
+    const savedTheme = localStorage.getItem("theme");
 
     if (savedTheme === "dark") {
       setDarkMode(true);
@@ -23,27 +21,22 @@ function Navbar() {
 
     if (newTheme) {
       document.body.classList.add("dark");
-      localStorage.setItem(
-        "theme",
-        "dark"
-      );
+      localStorage.setItem("theme", "dark");
     } else {
       document.body.classList.remove("dark");
-      localStorage.setItem(
-        "theme",
-        "light"
-      );
+      localStorage.setItem("theme", "light");
     }
   };
 
   return (
     <nav
       style={{
-        padding: "20px 40px",
-        borderBottom:
-          "1px solid var(--border)",
+        position: "sticky",
+        top: 0,
+        zIndex: 1000,
         background: "var(--card-bg)",
-        transition: "0.3s",
+        borderBottom: "1px solid var(--border)",
+        padding: "12px 24px",
       }}
     >
       <div
@@ -51,81 +44,82 @@ function Navbar() {
           maxWidth: "1200px",
           margin: "0 auto",
           display: "flex",
-          justifyContent:
-            "space-between",
+          justifyContent: "space-between",
           alignItems: "center",
         }}
       >
         <div
           style={{
             display: "flex",
-            gap: "10px",
             alignItems: "center",
+            gap: "12px",
           }}
         >
-          <FiBookOpen size={24} />
-
-          <h2
+          <div
             style={{
-              margin: 0,
+              width: "44px",
+              height: "44px",
+              borderRadius: "12px",
+              background:
+                "linear-gradient(135deg,#6366f1,#8b5cf6)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              color: "white",
             }}
           >
-            StudyHub Pro
-          </h2>
+            <FiBookOpen size={22} />
+          </div>
+
+          <div>
+            <h2
+              style={{
+                margin: 0,
+                fontSize: "22px",
+              }}
+            >
+              StudyHub Pro
+            </h2>
+
+            <p
+              style={{
+                margin: 0,
+                fontSize: "12px",
+                opacity: 0.6,
+              }}
+            >
+              Learn Smarter
+            </p>
+          </div>
         </div>
 
         <div
           style={{
             display: "flex",
-            gap: "20px",
             alignItems: "center",
+            gap: "14px",
           }}
         >
-          <span
-            style={{
-              cursor: "pointer",
-            }}
-          >
-            Home
-          </span>
-
-          <span
-            style={{
-              cursor: "pointer",
-            }}
-          >
-            Library
-          </span>
-
-          <span
-            style={{
-              cursor: "pointer",
-            }}
-          >
-            Categories
-          </span>
-
-          <AuthButton />
+          <span>Home</span>
+          <span>Library</span>
+          <span>Categories</span>
 
           <button
             onClick={toggleTheme}
             style={{
-              border: "none",
-              padding: "10px 14px",
+              width: "42px",
+              height: "42px",
               borderRadius: "12px",
-              cursor: "pointer",
-              fontSize: "18px",
-              background:
-                "var(--card-bg)",
+              border: "1px solid var(--border)",
+              background: "var(--card-bg)",
               color: "var(--text)",
-              border:
-                "1px solid var(--border)",
+              cursor: "pointer",
             }}
           >
-            {darkMode
-              ? "☀️"
-              : "🌙"}
+            {darkMode ? "☀️" : "🌙"}
           </button>
+
+          <AuthButton />
         </div>
       </div>
     </nav>

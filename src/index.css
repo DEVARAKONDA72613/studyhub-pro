@@ -1,64 +1,80 @@
 :root {
-  --bg: #f8f9fb;
-  --text: #111827;
-  --card-bg: #ffffff;
-  --border: #e5e7eb;
+--bg: #f8fafc;
+--text: #111827;
+--card-bg: #ffffff;
+--border: #e5e7eb;
+--secondary-text: #6b7280;
+}
+
+body.dark {
+--bg: #0a0a0a;
+--text: #fafafa;
+--card-bg: #171717;
+--border: #262626;
+--secondary-text: #a3a3a3;
+}
+
+* {
+  box-sizing: border-box;
+  }
+
+html {
+scroll-behavior: smooth;
 }
 
 body {
-  margin: 0;
-  font-family:
-    Inter,
-    system-ui,
-    sans-serif;
+margin: 0;
+padding: 0;
+font-family:
+Inter,
+system-ui,
+sans-serif;
 
-  background: var(--bg);
-  color: var(--text);
+background: var(--bg);
+color: var(--text);
 
-  transition:
-    background 0.3s ease,
-    color 0.3s ease;
+transition:
+background 0.3s ease,
+color 0.3s ease;
 }
 
-/* Premium Dark Mode */
-
-body.dark {
-  --bg: #0a0a0a;
-  --text: #fafafa;
-  --card-bg: #171717;
-  --border: #262626;
+a {
+color: inherit;
+text-decoration: none;
 }
 
-/* Smooth scrolling */
-
-html {
-  scroll-behavior: smooth;
+button {
+font-family: inherit;
 }
 
-/* Better selection */
+input,
+textarea,
+select {
+font-family: inherit;
+color: var(--text);
+}
+
+input::placeholder {
+color: var(--secondary-text);
+}
 
 ::selection {
-  background: rgba(255, 255, 255, 0.15);
+background: rgba(99, 102, 241, 0.3);
 }
 
-/* Modern scrollbar */
-
 ::-webkit-scrollbar {
-  width: 8px;
+width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #404040;
-  border-radius: 999px;
+background: #525252;
+border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #525252;
-}
-input::placeholder {
-  color: #737373;
+background: #737373;
 }

@@ -6,6 +6,9 @@ export const books = [
     icon: "🧠",
     downloads: 2100,
     rating: 4.8,
+    progress: 0,
+    views: 3487,
+
     color: "#dbeafe",
 
     viewLink:
@@ -28,6 +31,8 @@ export const books = [
     icon: "🚀",
     downloads: 3200,
     rating: 5.0,
+    progress: 0,
+    views: 9043,
     color: "#bfdbfe",
 
     viewLink:
@@ -50,6 +55,8 @@ export const books = [
     icon: "📜",
     downloads: 1700,
     rating: 4.7,
+    progress: 0,
+    views: 1200,
     color: "#fef3c7",
 
     viewLink:
@@ -72,6 +79,8 @@ export const books = [
     icon: "⚙️",
     downloads: 2400,
     rating: 4.9,
+    progress: 0,
+    views: 5698,
     color: "#dbeafe",
 
     viewLink:
@@ -94,6 +103,8 @@ export const books = [
     icon: "☕",
     downloads: 1800,
     rating: 4.7,
+    progress: 0,
+    views: 4983,
     color: "#fee2e2",
 
     viewLink:
@@ -116,6 +127,8 @@ export const books = [
     icon: "🖥️",
     downloads: 1500,
     rating: 4.6,
+    progress: 0,
+    views: 6045,
     color: "#fecaca",
 
     viewLink:
@@ -138,6 +151,8 @@ export const books = [
     icon: "🔥",
     downloads: 2600,
     rating: 4.9,
+    progress: 0,
+    views: 7261,
     color: "#fca5a5",
 
     viewLink:
@@ -160,6 +175,8 @@ export const books = [
     icon: "🐍",
     downloads: 3400,
     rating: 5.0,
+    progress: 0,
+    views: 1260,
     color: "#dcfce7",
 
     viewLink:
@@ -181,6 +198,8 @@ export const books = [
   icon: "🎨",
   downloads: 1400,
   rating: 4.7,
+  progress: 0,
+  views: 1222,
   color: "#fde68a",
 
   viewLink:
@@ -203,6 +222,8 @@ export const books = [
   icon: "🟨",
   downloads: 2900,
   rating: 4.9,
+  progress: 0,
+  views: 9043,
   color: "#fef08a",
 
   viewLink:
@@ -225,6 +246,8 @@ export const books = [
   icon: "🟢",
   downloads: 2600,
   rating: 4.8,
+  progress: 0,
+  views: 9057,
   color: "#bbf7d0",
 
   viewLink:
@@ -247,6 +270,8 @@ export const books = [
   icon: "🔥",
   downloads: 1200,
   rating: 4.6,
+  progress: 0,
+  views: 1200,
   color: "#fed7aa",
 
   viewLink:
@@ -269,6 +294,8 @@ export const books = [
   icon: "🗄️",
   downloads: 2400,
   rating: 4.8,
+  progress: 0,
+  views: 9834,
   color: "#ddd6fe",
 
   viewLink:
@@ -291,6 +318,8 @@ export const books = [
   icon: "📊",
   downloads: 1900,
   rating: 4.7,
+  progress: 0,
+  views: 1857,
   color: "#c7d2fe",
 
   viewLink:
@@ -313,6 +342,8 @@ export const books = [
   icon: "🍃",
   downloads: 2200,
   rating: 4.8,
+  progress: 0,
+  views: 7261,
   color: "#bbf7d0",
 
   viewLink:
@@ -335,6 +366,8 @@ export const books = [
   icon: "🖥️",
   downloads: 1600,
   rating: 4.7,
+  progress: 0,
+  views: 3487,
   color: "#e9d5ff",
 
   viewLink:
@@ -357,6 +390,8 @@ export const books = [
   icon: "🌐",
   downloads: 1800,
   rating: 4.8,
+  progress: 0,
+  views: 4980,
   color: "#bfdbfe",
 
   viewLink:
@@ -379,6 +414,8 @@ export const books = [
   icon: "💻",
   downloads: 2300,
   rating: 4.9,
+  progress: 0,
+  views: 7364,
   color: "#fde68a",
 
   viewLink:
@@ -401,6 +438,8 @@ export const books = [
   icon: "⚡",
   downloads: 2100,
   rating: 4.8,
+  progress: 0,
+  views: 8547,
   color: "#fecaca",
 
   viewLink:

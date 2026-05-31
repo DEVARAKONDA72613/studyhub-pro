@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-
+import { useState, useEffect } from "react";
 import {
   signInWithPopup,
   signOut,
@@ -14,6 +13,9 @@ import {
 function AuthButton() {
   const [user, setUser] =
     useState(null);
+
+  const [showMenu, setShowMenu] =
+    useState(false);
 
   useEffect(() => {
     const unsubscribe =
@@ -40,32 +42,193 @@ function AuthButton() {
 
   const handleLogout = async () => {
     await signOut(auth);
+    setShowMenu(false);
   };
 
-  if (user) {
+  if (!user) {
     return (
-      <div>
-        <img
-          src={user.photoURL}
-          alt="profile"
-        />
-
-        <span>
-          {user.displayName}
-        </span>
-
-        <button onClick={handleLogout}>
-          Logout
-        </button>
-      </div>
+      <button
+        onClick={handleLogin}
+        style={{
+          border: "none",
+          padding: "10px 18px",
+          borderRadius: "12px",
+          background:
+            "linear-gradient(135deg,#6366f1,#8b5cf6)",
+          color: "white",
+          cursor: "pointer",
+          fontWeight: "600",
+        }}
+      >
+        Sign In
+      </button>
     );
   }
 
   return (
-    <button onClick={handleLogin}>
-      Sign in
-    </button>
+    <div
+      style={{
+        position: "relative",
+      }}
+    >
+      <div
+        onClick={() =>
+          setShowMenu(!showMenu)
+        }
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          cursor: "pointer",
+          padding: "8px 12px",
+          borderRadius: "14px",
+          border:
+            "1px solid var(--border)",
+          background:
+            "var(--card-bg)",
+        }}
+      >
+        <img
+          src={user.photoURL}
+          alt="profile"
+          style={{
+            width: "40px",
+            height: "40px",
+            borderRadius: "50%",
+            objectFit: "cover",
+          }}
+        />
+
+        <span
+          style={{
+            color:
+              "var(--text)",
+            fontWeight: "600",
+          }}
+        >
+          {
+            user.displayName?.split(
+              " "
+            )[0]
+          }
+        </span>
+
+        <span
+          style={{
+            color:
+              "var(--text)",
+          }}
+        >
+          ▼
+        </span>
+      </div>
+
+      {showMenu && (
+        <div
+          style={{
+            position: "absolute",
+            top: "60px",
+            right: 0,
+            width: "220px",
+            background:
+              "var(--card-bg)",
+            border:
+              "1px solid var(--border)",
+            borderRadius: "16px",
+            padding: "12px",
+            boxShadow:
+              "0 15px 35px rgba(0,0,0,0.2)",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              marginBottom: "10px",
+            }}
+          >
+            <div
+              style={{
+                fontWeight: "700",
+                color:
+                  "var(--text)",
+              }}
+            >
+              {
+                user.displayName
+              }
+            </div>
+
+            <div
+              style={{
+                fontSize: "12px",
+                opacity: 0.7,
+                color:
+                  "var(--text)",
+              }}
+            >
+              {user.email}
+            </div>
+          </div>
+
+          <hr
+            style={{
+              border:
+                "1px solid var(--border)",
+            }}
+          />
+
+          <button
+            style={menuBtn}
+          >
+            📚 My Library
+          </button>
+
+          <button
+            style={menuBtn}
+          >
+            ⭐ My Ratings
+          </button>
+
+          <button
+            style={menuBtn}
+          >
+            👤 Profile
+          </button>
+
+          <hr
+            style={{
+              border:
+                "1px solid var(--border)",
+            }}
+          />
+
+          <button
+            onClick={
+              handleLogout
+            }
+            style={{
+              ...menuBtn,
+              color:
+                "#ef4444",
+            }}
+          >
+            🚪 Logout
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
+
+const menuBtn = {
+  width: "100%",
+  textAlign: "left",
+  padding: "10px",
+  border: "none",
+  background: "transparent",
+  cursor: "pointer",
+  color: "var(--text)",
+  borderRadius: "8px",
+};
 
 export default AuthButton;

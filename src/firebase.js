@@ -5,6 +5,10 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 
+import {
+  getFirestore,
+} from "firebase/firestore";
+
 const firebaseConfig = {
   apiKey: "AIzaSyCfRnFUbpcdAzJPyHEoyBve97s_HHIn428",
   authDomain: "studyhub-pro-17e79.firebaseapp.com",
@@ -21,3 +25,8 @@ export const auth = getAuth(app);
 
 export const provider =
   new GoogleAuthProvider();
+
+export const db =
+  getFirestore(app);
+
+export default app;

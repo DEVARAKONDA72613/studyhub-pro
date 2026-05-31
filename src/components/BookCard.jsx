@@ -1,39 +1,131 @@
+import { useEffect, useState } from "react";
+
 function BookCard({ book }) {
+  const [views, setViews] = useState(
+    book.views || 0
+  );
+
+  const [downloads, setDownloads] =
+    useState(
+      book.downloads || 0
+    );
+
+  const [progress, setProgress] =
+    useState(0);
+
+  useEffect(() => {
+    const savedViews =
+      Number(
+        localStorage.getItem(
+          `views-${book.id}`
+        )
+      ) || book.views || 0;
+
+    const savedDownloads =
+      Number(
+        localStorage.getItem(
+          `downloads-${book.id}`
+        )
+      ) || book.downloads || 0;
+
+    const savedProgress =
+      Number(
+        localStorage.getItem(
+          `progress-${book.id}`
+        )
+      ) || 0;
+
+    setViews(savedViews);
+    setDownloads(savedDownloads);
+    setProgress(savedProgress);
+  }, [book.id]);
+
+  const handleView = () => {
+    const newViews = views + 1;
+
+    const newProgress =
+      Math.min(
+        progress + 10,
+        100
+      );
+
+    localStorage.setItem(
+      `views-${book.id}`,
+      newViews
+    );
+
+    localStorage.setItem(
+      `progress-${book.id}`,
+      newProgress
+    );
+
+    setViews(newViews);
+    setProgress(newProgress);
+
+    if (book.viewLink) {
+      window.open(
+        book.viewLink,
+        "_blank"
+      );
+    }
+  };
+
+  const handleDownload = () => {
+    const newDownloads =
+      downloads + 1;
+
+    localStorage.setItem(
+      `downloads-${book.id}`,
+      newDownloads
+    );
+
+    setDownloads(newDownloads);
+
+    if (book.downloadLink) {
+      window.open(
+        book.downloadLink,
+        "_blank"
+      );
+    }
+  };
+
   return (
     <div
       onMouseEnter={(e) => {
         e.currentTarget.style.transform =
           "translateY(-8px)";
-        e.currentTarget.style.boxShadow =
-          "0 20px 40px rgba(0,0,0,0.25)";
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform =
           "translateY(0)";
-        e.currentTarget.style.boxShadow =
-          "0 4px 12px rgba(0,0,0,0.05)";
       }}
       style={{
-        background: "var(--card-bg)",
-        border: "1px solid var(--border)",
+        background:
+          "var(--card-bg)",
+        border:
+          "1px solid var(--border)",
         borderRadius: "24px",
         padding: "24px",
-        transition:
-          "transform 0.3s ease, box-shadow 0.3s ease",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+        transition: "0.3s",
+        boxShadow:
+          "0 4px 12px rgba(0,0,0,0.05)",
       }}
     >
       <div
         style={{
           width: "70px",
           height: "70px",
-          background: book.color,
+          background:
+            book.color,
           borderRadius: "18px",
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent:
+            "center",
+          alignItems:
+            "center",
           fontSize: "34px",
-          marginBottom: "15px",
+          marginBottom:
+            "15px",
         }}
       >
         {book.icon}
@@ -43,7 +135,6 @@ function BookCard({ book }) {
         style={{
           marginBottom: "10px",
           color: "var(--text)",
-          fontSize: "22px",
         }}
       >
         {book.title}
@@ -51,12 +142,13 @@ function BookCard({ book }) {
 
       <span
         style={{
-          background: "rgba(255,255,255,0.08)",
-          border: "1px solid var(--border)",
+          background:
+            "rgba(255,255,255,0.08)",
+          border:
+            "1px solid var(--border)",
           padding: "6px 12px",
           borderRadius: "999px",
           fontSize: "13px",
-          fontWeight: "600",
           display: "inline-block",
           marginBottom: "15px",
           color: "var(--text)",
@@ -68,15 +160,23 @@ function BookCard({ book }) {
       <div
         style={{
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent:
+            "space-between",
           marginBottom: "20px",
-          fontSize: "14px",
           color: "var(--text)",
-          opacity: 0.85,
         }}
       >
-        <span>⭐ {book.rating}</span>
-        <span>⬇️ {book.downloads}</span>
+        <span>
+          ⭐ {book.rating}
+        </span>
+
+        <span>
+          👁️ {views}
+        </span>
+
+        <span>
+          ⬇️ {downloads}
+        </span>
       </div>
 
       <div
@@ -87,11 +187,7 @@ function BookCard({ book }) {
         }}
       >
         <button
-          onClick={() => {
-            if (book.viewLink) {
-              window.open(book.viewLink, "_blank");
-            }
-          }}
+          onClick={handleView}
           style={{
             flex: 1,
             padding: "12px",
@@ -107,21 +203,19 @@ function BookCard({ book }) {
         </button>
 
         <button
-          onClick={() => {
-            if (book.downloadLink) {
-              window.open(
-                book.downloadLink,
-                "_blank"
-              );
-            }
-          }}
+          onClick={
+            handleDownload
+          }
           style={{
             flex: 1,
             padding: "12px",
             borderRadius: "12px",
-            border: "1px solid var(--border)",
-            background: "var(--card-bg)",
-            color: "var(--text)",
+            border:
+              "1px solid var(--border)",
+            background:
+              "var(--card-bg)",
+            color:
+              "var(--text)",
             cursor: "pointer",
             fontWeight: "600",
           }}
@@ -130,38 +224,81 @@ function BookCard({ book }) {
         </button>
       </div>
 
+      <div
+        style={{
+          marginBottom: "18px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent:
+              "space-between",
+            marginBottom: "6px",
+            color:
+              "var(--text)",
+          }}
+        >
+          <span>
+            Continue Reading
+          </span>
+
+          <span>
+            {progress}%
+          </span>
+        </div>
+
+        <div
+          style={{
+            height: "8px",
+            background:
+              "rgba(255,255,255,0.08)",
+            borderRadius:
+              "999px",
+            overflow:
+              "hidden",
+          }}
+        >
+          <div
+            style={{
+              width:
+                `${progress}%`,
+              height: "100%",
+              background:
+                "linear-gradient(90deg,#6366f1,#8b5cf6)",
+            }}
+          />
+        </div>
+      </div>
+
       {book.recommended &&
-        book.recommended.length > 0 && (
+        book.recommended.length >
+          0 && (
           <div
             style={{
               borderTop:
                 "1px solid var(--border)",
-              paddingTop: "15px",
+              paddingTop:
+                "15px",
+              color:
+                "var(--text)",
             }}
           >
-            <p
-              style={{
-                margin: "0 0 10px 0",
-                color: "var(--text)",
-                fontWeight: "600",
-                fontSize: "14px",
-              }}
-            >
+            <p>
               📚 Recommended Next
             </p>
 
-            <ul
-              style={{
-                margin: 0,
-                paddingLeft: "18px",
-                color: "var(--text)",
-                opacity: 0.8,
-                fontSize: "13px",
-              }}
-            >
+            <ul>
               {book.recommended.map(
-                (item, index) => (
-                  <li key={index}>
+                (
+                  item,
+                  index
+                ) => (
+                  <li
+                    key={
+                      index
+                    }
+                  >
                     {item}
                   </li>
                 )
