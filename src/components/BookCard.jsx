@@ -13,6 +13,9 @@ function BookCard({ book }) {
   const [progress, setProgress] =
     useState(0);
 
+  const [saved, setSaved] =
+    useState(false);
+
   useEffect(() => {
     const savedViews =
       Number(
@@ -35,9 +38,20 @@ function BookCard({ book }) {
         )
       ) || 0;
 
+    const library =
+      JSON.parse(
+        localStorage.getItem(
+          "library"
+        )
+      ) || [];
+
     setViews(savedViews);
     setDownloads(savedDownloads);
     setProgress(savedProgress);
+
+    setSaved(
+      library.includes(book.id)
+    );
   }, [book.id]);
 
   const handleView = () => {
@@ -86,6 +100,45 @@ function BookCard({ book }) {
         book.downloadLink,
         "_blank"
       );
+    }
+  };
+
+  const handleSave = () => {
+    const library =
+      JSON.parse(
+        localStorage.getItem(
+          "library"
+        )
+      ) || [];
+
+    if (
+      library.includes(book.id)
+    ) {
+      const updated =
+        library.filter(
+          (id) =>
+            id !== book.id
+        );
+
+      localStorage.setItem(
+        "library",
+        JSON.stringify(
+          updated
+        )
+      );
+
+      setSaved(false);
+    } else {
+      library.push(book.id);
+
+      localStorage.setItem(
+        "library",
+        JSON.stringify(
+          library
+        )
+      );
+
+      setSaved(true);
     }
   };
 
@@ -182,7 +235,7 @@ function BookCard({ book }) {
       <div
         style={{
           display: "flex",
-          gap: "10px",
+          gap: "8px",
           marginBottom: "18px",
         }}
       >
@@ -221,6 +274,26 @@ function BookCard({ book }) {
           }}
         >
           Download
+        </button>
+
+        <button
+          onClick={handleSave}
+          style={{
+            flex: 1,
+            padding: "12px",
+            borderRadius: "12px",
+            border: "none",
+            background: saved
+              ? "#22c55e"
+              : "#8b5cf6",
+            color: "white",
+            cursor: "pointer",
+            fontWeight: "600",
+          }}
+        >
+          {saved
+            ? "Saved ✓"
+            : "Save"}
         </button>
       </div>
 

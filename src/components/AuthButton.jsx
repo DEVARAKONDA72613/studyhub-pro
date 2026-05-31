@@ -5,6 +5,8 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 
+import { Link } from "react-router-dom";
+
 import {
   auth,
   provider,
@@ -89,7 +91,13 @@ function AuthButton() {
         }}
       >
         <img
-          src={user.photoURL}
+          src={
+            user.photoURL ||
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(
+              user.displayName ||
+                "User"
+            )}`
+          }
           alt="profile"
           style={{
             width: "40px",
@@ -112,15 +120,6 @@ function AuthButton() {
             )[0]
           }
         </span>
-
-        <span
-          style={{
-            color:
-              "var(--text)",
-          }}
-        >
-          ▼
-        </span>
       </div>
 
       {showMenu && (
@@ -129,7 +128,7 @@ function AuthButton() {
             position: "absolute",
             top: "60px",
             right: 0,
-            width: "220px",
+            width: "240px",
             background:
               "var(--card-bg)",
             border:
@@ -170,18 +169,14 @@ function AuthButton() {
             </div>
           </div>
 
-          <hr
-            style={{
-              border:
-                "1px solid var(--border)",
-            }}
-          />
+          <hr />
 
-          <button
-            style={menuBtn}
+          <Link
+            to="/library"
+            style={menuLink}
           >
             📚 My Library
-          </button>
+          </Link>
 
           <button
             style={menuBtn}
@@ -195,12 +190,7 @@ function AuthButton() {
             👤 Profile
           </button>
 
-          <hr
-            style={{
-              border:
-                "1px solid var(--border)",
-            }}
-          />
+          <hr />
 
           <button
             onClick={
@@ -229,6 +219,14 @@ const menuBtn = {
   cursor: "pointer",
   color: "var(--text)",
   borderRadius: "8px",
+};
+
+const menuLink = {
+  display: "block",
+  width: "100%",
+  padding: "10px",
+  textDecoration: "none",
+  color: "var(--text)",
 };
 
 export default AuthButton;

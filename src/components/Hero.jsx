@@ -4,7 +4,8 @@ import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
 function Hero() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] =
+    useState(null);
 
   useEffect(() => {
     const unsubscribe =
@@ -44,9 +45,12 @@ function Hero() {
               margin: 0,
             }}
           >
-            Welcome back,
-            {" "}
-            {user.displayName?.split(" ")[0]}
+            Welcome back{" "}
+            {
+              user.displayName?.split(
+                " "
+              )[0]
+            }
             👋
           </h2>
 
@@ -56,10 +60,27 @@ function Hero() {
               opacity: 0.9,
             }}
           >
-            Ready to continue your learning journey?
+            Ready to continue your
+            learning journey?
           </p>
         </motion.div>
       )}
+
+      <div
+        style={{
+          display: "inline-block",
+          padding: "8px 14px",
+          borderRadius: "999px",
+          border:
+            "1px solid var(--border)",
+          marginBottom: "20px",
+          fontSize: "14px",
+          fontWeight: "600",
+          color: "var(--text)",
+        }}
+      >
+        🚀 Trusted by Students
+      </div>
 
       <motion.h1
         initial={{
@@ -74,6 +95,8 @@ function Hero() {
           fontSize: "3rem",
           lineHeight: "1.1",
           fontWeight: "bold",
+          color: "var(--text)",
+          marginBottom: "20px",
         }}
       >
         Study Smarter.
@@ -95,11 +118,14 @@ function Hero() {
           fontSize: "1.2rem",
           color: "var(--text)",
           opacity: 0.8,
-          maxWidth: "600px",
+          maxWidth: "650px",
+          lineHeight: "1.7",
         }}
       >
-        Access notes, organize resources,
-        and build your personal learning hub.
+        Access premium notes,
+        organize your resources,
+        and accelerate your
+        learning journey.
       </motion.p>
     </section>
   );

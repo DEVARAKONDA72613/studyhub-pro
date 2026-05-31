@@ -1,4 +1,7 @@
-function SearchBar({ search, setSearch }) {
+function SearchBar({
+  search,
+  setSearch,
+}) {
   return (
     <div
       style={{
@@ -14,22 +17,33 @@ function SearchBar({ search, setSearch }) {
       >
         <input
           type="text"
-          placeholder="🔍 Search notes..."
+          placeholder="🔍 Search notes, subjects, topics..."
           value={search}
           onChange={(e) =>
-            setSearch(e.target.value)
+            setSearch(
+              e.target.value
+            )
           }
           style={{
             width: "100%",
-            padding: "18px 20px",
-            borderRadius: "16px",
-            border: "1px solid var(--border)",
-            background: "var(--card-bg)",
-            color: "var(--text)",
+            padding:
+              "20px 22px",
+            borderRadius:
+              "18px",
+            border:
+              "1px solid var(--border)",
+            background:
+              "var(--card-bg)",
+            color:
+              "var(--text)",
             fontSize: "16px",
             outline: "none",
-            boxSizing: "border-box",
-            transition: "all 0.3s ease",
+            boxSizing:
+              "border-box",
+            transition:
+              "all 0.3s ease",
+            boxShadow:
+              "0 4px 12px rgba(0,0,0,0.05)",
           }}
         />
       </div>
