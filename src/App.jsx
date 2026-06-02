@@ -6,6 +6,7 @@ import {
 import Home from "./pages/Home";
 import Library from "./pages/Library";
 import Category from "./pages/Category";
+import BookDetails from "./pages/BookDetails";
 
 function App() {
   return (
@@ -23,6 +24,11 @@ function App() {
       <Route
         path="/category/:name"
         element={<Category />}
+      />
+
+      <Route
+        path="/book/:id"
+        element={<BookDetails />}
       />
     </Routes>
   );

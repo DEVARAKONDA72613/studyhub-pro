@@ -16,6 +16,9 @@ function BookCard({ book }) {
   const [saved, setSaved] =
     useState(false);
 
+  const [userRating, setUserRating] =
+    useState(0);
+
   useEffect(() => {
     const savedViews =
       Number(
@@ -38,6 +41,13 @@ function BookCard({ book }) {
         )
       ) || 0;
 
+    const savedRating =
+      Number(
+        localStorage.getItem(
+          `rating-${book.id}`
+        )
+      ) || 0;
+
     const library =
       JSON.parse(
         localStorage.getItem(
@@ -48,10 +58,8 @@ function BookCard({ book }) {
     setViews(savedViews);
     setDownloads(savedDownloads);
     setProgress(savedProgress);
-
-    setSaved(
-      library.includes(book.id)
-    );
+    setSaved(library.includes(book.id));
+    setUserRating(savedRating);
   }, [book.id]);
 
   const handleView = () => {
@@ -142,6 +150,14 @@ function BookCard({ book }) {
     }
   };
 
+  const handleRating = (rating) => {
+    localStorage.setItem(
+      `rating-${book.id}`,
+      rating
+    );
+    setUserRating(rating);
+  };
+
   return (
     <div
       onMouseEnter={(e) => {
@@ -168,17 +184,13 @@ function BookCard({ book }) {
         style={{
           width: "70px",
           height: "70px",
-          background:
-            book.color,
+          background: book.color,
           borderRadius: "18px",
           display: "flex",
-          justifyContent:
-            "center",
-          alignItems:
-            "center",
+          justifyContent: "center",
+          alignItems: "center",
           fontSize: "34px",
-          marginBottom:
-            "15px",
+          marginBottom: "15px",
         }}
       >
         {book.icon}
@@ -256,19 +268,14 @@ function BookCard({ book }) {
         </button>
 
         <button
-          onClick={
-            handleDownload
-          }
+          onClick={handleDownload}
           style={{
             flex: 1,
             padding: "12px",
             borderRadius: "12px",
-            border:
-              "1px solid var(--border)",
-            background:
-              "var(--card-bg)",
-            color:
-              "var(--text)",
+            border: "1px solid var(--border)",
+            background: "var(--card-bg)",
+            color: "var(--text)",
             cursor: "pointer",
             fontWeight: "600",
           }}
@@ -291,10 +298,64 @@ function BookCard({ book }) {
             fontWeight: "600",
           }}
         >
-          {saved
-            ? "Saved ✓"
-            : "Save"}
+          {saved ? "Saved ✓" : "Save"}
         </button>
+      </div>
+
+      <div
+        style={{
+          marginBottom: "18px",
+        }}
+      >
+        <p
+          style={{
+            marginBottom: "8px",
+            color: "var(--text)",
+            fontWeight: "600",
+          }}
+        >
+          Your Rating
+        </p>
+
+        <div
+          style={{
+            display: "flex",
+            gap: "4px",
+            fontSize: "24px",
+            cursor: "pointer",
+          }}
+        >
+          {[1, 2, 3, 4, 5].map(
+            (star) => (
+              <span
+                key={star}
+                onClick={() =>
+                  handleRating(star)
+                }
+                style={{
+                  userSelect: "none",
+                }}
+              >
+                {star <= userRating
+                  ? "⭐"
+                  : "☆"}
+              </span>
+            )
+          )}
+        </div>
+
+        {userRating > 0 && (
+          <p
+            style={{
+              marginTop: "6px",
+              color: "var(--text)",
+              opacity: 0.7,
+            }}
+          >
+            You rated this{" "}
+            {userRating}/5
+          </p>
+        )}
       </div>
 
       <div
@@ -308,8 +369,7 @@ function BookCard({ book }) {
             justifyContent:
               "space-between",
             marginBottom: "6px",
-            color:
-              "var(--text)",
+            color: "var(--text)",
           }}
         >
           <span>
@@ -326,16 +386,13 @@ function BookCard({ book }) {
             height: "8px",
             background:
               "rgba(255,255,255,0.08)",
-            borderRadius:
-              "999px",
-            overflow:
-              "hidden",
+            borderRadius: "999px",
+            overflow: "hidden",
           }}
         >
           <div
             style={{
-              width:
-                `${progress}%`,
+              width: `${progress}%`,
               height: "100%",
               background:
                 "linear-gradient(90deg,#6366f1,#8b5cf6)",
@@ -351,10 +408,8 @@ function BookCard({ book }) {
             style={{
               borderTop:
                 "1px solid var(--border)",
-              paddingTop:
-                "15px",
-              color:
-                "var(--text)",
+              paddingTop: "15px",
+              color: "var(--text)",
             }}
           >
             <p>
@@ -363,15 +418,8 @@ function BookCard({ book }) {
 
             <ul>
               {book.recommended.map(
-                (
-                  item,
-                  index
-                ) => (
-                  <li
-                    key={
-                      index
-                    }
-                  >
+                (item, index) => (
+                  <li key={index}>
                     {item}
                   </li>
                 )
