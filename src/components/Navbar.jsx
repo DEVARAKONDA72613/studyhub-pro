@@ -1,264 +1,172 @@
-import { FiBookOpen } from "react-icons/fi";
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import AuthButton from "./AuthButton";
+import { useAuth } from "../context/AuthContext";
+import { subscribeToUserStats } from "../utils/firestoreStats";
+
+const navItems = [
+  { label: "Home", to: "/" },
+  { label: "Library", to: "/library" },
+  { label: "Study rooms", to: "/study-rooms" },
+];
+
+const categories = [
+  "DSA",
+  "Programming Languages",
+  "Web Development",
+  "Database Systems",
+  "Core Computer Science",
+];
+
+const today = new Date().toLocaleDateString("en-GB", {
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
 
 function Navbar() {
-  const [darkMode, setDarkMode] =
-    useState(false);
+  const { user } = useAuth();
+  const [darkMode, setDarkMode] = useState(false);
+  const [showCategories, setShowCategories] = useState(false);
+  const [streak, setStreak] = useState(0);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const catRef = useRef(null);
 
-  const [showCategories, setShowCategories] =
-    useState(false);
+  const inRoom = /^\/study-room\/[^/]+/.test(location.pathname);
 
   useEffect(() => {
-    const savedTheme =
-      localStorage.getItem("theme");
-
-    if (savedTheme === "dark") {
+    if (localStorage.getItem("theme") === "dark") {
       setDarkMode(true);
       document.body.classList.add("dark");
     }
   }, []);
 
+  useEffect(() => {
+    if (!user) {
+      setStreak(0);
+      return;
+    }
+    const unsubscribe = subscribeToUserStats(user.uid, (stats) =>
+      setStreak(stats.currentStreak || 0)
+    );
+    return () => unsubscribe();
+  }, [user]);
+
+  useEffect(() => {
+    if (!showCategories) return;
+    const close = (e) => {
+      if (e.type === "keydown" && e.key !== "Escape") return;
+      if (e.type === "mousedown" && catRef.current?.contains(e.target)) return;
+      setShowCategories(false);
+    };
+    document.addEventListener("mousedown", close);
+    document.addEventListener("keydown", close);
+    return () => {
+      document.removeEventListener("mousedown", close);
+      document.removeEventListener("keydown", close);
+    };
+  }, [showCategories]);
+
   const toggleTheme = () => {
-    const newTheme = !darkMode;
+    const next = !darkMode;
+    setDarkMode(next);
+    document.body.classList.toggle("dark", next);
+    localStorage.setItem("theme", next ? "dark" : "light");
+  };
 
-    setDarkMode(newTheme);
-
-    if (newTheme) {
-      document.body.classList.add("dark");
-      localStorage.setItem(
-        "theme",
-        "dark"
-      );
-    } else {
-      document.body.classList.remove(
-        "dark"
-      );
-      localStorage.setItem(
-        "theme",
-        "light"
-      );
+  // Ask before leaving a study room via any in-app link. The browser's own
+  // back/forward buttons are not intercepted.
+  const guardedNav = (e, to) => {
+    if (!inRoom) return;
+    e.preventDefault();
+    if (
+      window.confirm(
+        "Leave this study room? Other participants will see you go offline shortly after."
+      )
+    ) {
+      navigate(to);
     }
   };
 
-  const categories = [
-    "DSA",
-    "Programming Languages",
-    "Web Development",
-    "Database Systems",
-    "Core Computer Science",
-  ];
-
-  const linkStyle = {
-    textDecoration: "none",
-    color: "var(--text)",
-    fontWeight: "600",
-    fontSize: "15px",
-  };
+  const isActive = (to) =>
+    to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);
 
   return (
-    <nav
-      style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 1000,
-        background: "var(--card-bg)",
-        borderBottom:
-          "1px solid var(--border)",
-        padding: "14px 24px",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-          display: "flex",
-          justifyContent:
-            "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Link
-          to="/"
-          style={{
-            textDecoration: "none",
-            color: "inherit",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-            }}
-          >
-            <div
-              style={{
-                width: "48px",
-                height: "48px",
-                borderRadius: "14px",
-                background:
-                  "linear-gradient(135deg,#6366f1,#8b5cf6)",
-                display: "flex",
-                justifyContent:
-                  "center",
-                alignItems: "center",
-                color: "white",
-              }}
-            >
-              <FiBookOpen size={24} />
-            </div>
-
-            <div>
-              <h2
-                style={{
-                  margin: 0,
-                  fontSize: "22px",
-                }}
-              >
-                StudyHub Pro
-              </h2>
-
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: "12px",
-                  opacity: 0.6,
-                }}
-              >
-                Learn Smarter
-              </p>
-            </div>
-          </div>
-        </Link>
-
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "20px",
-          }}
-        >
-          <Link
-            to="/"
-            style={linkStyle}
-          >
-            Home
-          </Link>
-
-          <Link
-            to="/library"
-            style={linkStyle}
-          >
-            Library
-          </Link>
-
-          <div
-            style={{
-              position: "relative",
-            }}
-          >
+    <>
+      <div className="wrap">
+        <div className="topstrip mono">
+          <span className="hide-sm">{today}</span>
+          <span className="hide-sm">Vol. 01 · Study edition</span>
+          <span className="topr">
+            {streak > 0 && (
+              <span className="streak" title={`${streak}-day study streak`}>
+                {streak}-day streak
+              </span>
+            )}
             <button
-              onClick={() =>
-                setShowCategories(
-                  !showCategories
-                )
-              }
-              style={{
-                border: "none",
-                background:
-                  "transparent",
-                cursor: "pointer",
-                color:
-                  "var(--text)",
-                fontWeight:
-                  "600",
-                fontSize: "15px",
-              }}
+              className="chip"
+              onClick={toggleTheme}
+              aria-label={darkMode ? "Switch to day edition" : "Switch to night edition"}
             >
-              Categories
+              {darkMode ? "Day edition" : "Night edition"}
             </button>
+            <AuthButton />
+          </span>
+        </div>
 
+        <header className="mast">
+          <Link to="/" className="brand" onClick={(e) => guardedNav(e, "/")}>
+            StudyHub<i>Pro</i>
+          </Link>
+        </header>
+      </div>
+
+      <nav className="idx-bar" aria-label="Sections">
+        <div className="wrap idx">
+          {navItems.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={isActive(item.to) ? "on" : ""}
+              aria-current={isActive(item.to) ? "page" : undefined}
+              onClick={(e) => guardedNav(e, item.to)}
+            >
+              {item.label}
+            </Link>
+          ))}
+
+          <span ref={catRef} className="relative">
+            <button
+              className="idx-btn"
+              onClick={() => setShowCategories(!showCategories)}
+              aria-expanded={showCategories}
+              aria-haspopup="true"
+            >
+              Categories ▾
+            </button>
             {showCategories && (
-              <div
-                style={{
-                  position:
-                    "absolute",
-                  top: "45px",
-                  right: 0,
-                  width: "250px",
-                  background:
-                    "var(--card-bg)",
-                  border:
-                    "1px solid var(--border)",
-                  borderRadius:
-                    "14px",
-                  overflow:
-                    "hidden",
-                  boxShadow:
-                    "0 10px 30px rgba(0,0,0,0.15)",
-                }}
-              >
-                {categories.map(
-                  (category) => (
-                    <Link
-                      key={category}
-                      to={`/category/${category}`}
-                      onClick={() =>
-                        setShowCategories(
-                          false
-                        )
-                      }
-                      style={{
-                        display:
-                          "block",
-                        padding:
-                          "14px 18px",
-                        color:
-                          "var(--text)",
-                        textDecoration:
-                          "none",
-                        borderBottom:
-                          "1px solid var(--border)",
-                      }}
-                    >
-                      {category}
-                    </Link>
-                  )
-                )}
+              <div className="menu" role="menu">
+                {categories.map((category) => (
+                  <Link
+                    key={category}
+                    to={`/category/${category}`}
+                    role="menuitem"
+                    onClick={(e) => {
+                      setShowCategories(false);
+                      guardedNav(e, `/category/${category}`);
+                    }}
+                  >
+                    {category}
+                  </Link>
+                ))}
               </div>
             )}
-          </div>
-
-          <button
-            onClick={toggleTheme}
-            style={{
-              width: "42px",
-              height: "42px",
-              borderRadius:
-                "12px",
-              border:
-                "1px solid var(--border)",
-              background:
-                "var(--card-bg)",
-              color:
-                "var(--text)",
-              cursor:
-                "pointer",
-              fontSize:
-                "18px",
-            }}
-          >
-            {darkMode
-              ? "☀️"
-              : "🌙"}
-          </button>
-
-          <AuthButton />
+          </span>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 }
 

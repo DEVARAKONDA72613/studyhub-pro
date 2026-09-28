@@ -1,101 +1,30 @@
 import { Link } from "react-router-dom";
+import { books } from "../data/books";
 
 const categories = [
-  {
-    name: "DSA",
-    icon: "🧠",
-  },
-  {
-    name: "Programming Languages",
-    icon: "💻",
-  },
-  {
-    name: "Web Development",
-    icon: "🌐",
-  },
-  {
-    name: "Database Systems",
-    icon: "🗄️",
-  },
-  {
-    name: "Core Computer Science",
-    icon: "⚙️",
-  },
+  { name: "DSA", color: "var(--sig)" },
+  { name: "Programming Languages", color: "var(--hl)" },
+  { name: "Web Development", color: "var(--ok)" },
+  { name: "Database Systems", color: "var(--blue)" },
+  { name: "Core Computer Science", color: "var(--ink2)" },
 ];
 
 function PopularCategories() {
   return (
-    <section
-      style={{
-        maxWidth: "1200px",
-        margin: "0 auto",
-        padding: "20px",
-      }}
-    >
-      <h2>
-        🔥 Popular Categories
-      </h2>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(auto-fit,minmax(220px,1fr))",
-          gap: "20px",
-        }}
-      >
-        {categories.map(
-          (category) => (
-            <Link
-              key={category.name}
-              to={`/category/${category.name}`}
-              style={{
-                textDecoration:
-                  "none",
-                color:
-                  "var(--text)",
-              }}
-            >
-              <div
-                style={{
-                  background:
-                    "var(--card-bg)",
-                  border:
-                    "1px solid var(--border)",
-                  borderRadius:
-                    "20px",
-                  padding:
-                    "24px",
-                  textAlign:
-                    "center",
-                  cursor:
-                    "pointer",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize:
-                      "40px",
-                    marginBottom:
-                      "10px",
-                  }}
-                >
-                  {
-                    category.icon
-                  }
-                </div>
-
-                <h3>
-                  {
-                    category.name
-                  }
-                </h3>
-              </div>
-            </Link>
-          )
-        )}
-      </div>
-    </section>
+    <div className="cards">
+      {categories.map(({ name, color }, index) => {
+        const count = books.filter((b) => b.category === name).length;
+        return (
+          <Link key={name} to={`/category/${name}`} className="idx-card" style={{ "--c": color }}>
+            <div className="num">{String(index + 1).padStart(2, "0")}</div>
+            <b>{name}</b>
+            <span className="mono">
+              {count} note{count === 1 ? "" : "s"}
+            </span>
+          </Link>
+        );
+      })}
+    </div>
   );
 }
 

@@ -1,83 +1,47 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import BookCard from "../components/BookCard";
 
 import { books } from "../data/books";
 
 function Category() {
   const { name } = useParams();
-
-  const filteredBooks =
-    books.filter(
-      (book) =>
-        book.category === name
-    );
+  const filteredBooks = books.filter((book) => book.category === name);
 
   return (
     <>
       <Navbar />
 
-      <div
-        style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-          padding: "40px 20px",
-        }}
-      >
-        <h1>
-          📂 {name}
-        </h1>
+      <main id="main-content" className="wrap page">
+        <div style={{ padding: "40px 0 28px" }}>
+          <Link to="/library" className="back mono">
+            ← Back to the library
+          </Link>
+          <h1 style={{ fontSize: "clamp(34px,5.5vw,60px)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1 }}>
+            {name}
+          </h1>
+          <p className="muted mono small" style={{ marginTop: 12 }}>
+            {filteredBooks.length} note{filteredBooks.length === 1 ? "" : "s"} in this category
+          </p>
+        </div>
 
-        <p
-          style={{
-            opacity: 0.7,
-            marginBottom: "30px",
-          }}
-        >
-          Browse notes from the{" "}
-          {name} category.
-        </p>
-
-        {filteredBooks.length ===
-        0 ? (
-          <div
-            style={{
-              textAlign:
-                "center",
-              padding: "60px",
-            }}
-          >
-            <h2>
-              No notes found
-            </h2>
-
-            <p>
-              Notes for this
-              category will
-              appear here.
-            </p>
+        {filteredBooks.length === 0 ? (
+          <div className="empty">
+            <h3>No notes found</h3>
+            <p>Notes for this category will appear here.</p>
           </div>
         ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns:
-                "repeat(auto-fit,minmax(280px,1fr))",
-              gap: "20px",
-            }}
-          >
-            {filteredBooks.map(
-              (book) => (
-                <BookCard
-                  key={book.id}
-                  book={book}
-                />
-              )
-            )}
+          <div className="books">
+            {filteredBooks.map((book) => (
+              <BookCard key={book.id} book={book} />
+            ))}
           </div>
         )}
-      </div>
+      </main>
+
+      <Footer />
     </>
   );
 }

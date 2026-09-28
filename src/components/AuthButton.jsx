@@ -1,232 +1,114 @@
-import { useState, useEffect } from "react";
-import {
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { useState, useEffect, useRef } from "react";
+import { signInWithPopup, signOut } from "firebase/auth";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { auth, provider } from "../firebase";
+import { useAuth } from "../context/AuthContext";
 
-import { Link } from "react-router-dom";
-
-import {
-  auth,
-  provider,
-} from "../firebase";
+function initials(name) {
+  return (name || "S")
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
 
 function AuthButton() {
-  const [user, setUser] =
-    useState(null);
+  const { user } = useAuth();
+  const [showMenu, setShowMenu] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const ref = useRef(null);
 
-  const [showMenu, setShowMenu] =
-    useState(false);
+  const inRoom = /^\/study-room\/[^/]+/.test(location.pathname);
 
   useEffect(() => {
-    const unsubscribe =
-      onAuthStateChanged(
-        auth,
-        (currentUser) => {
-          setUser(currentUser);
-        }
-      );
+    if (!showMenu) return;
+    const close = (e) => {
+      if (e.type === "keydown" && e.key !== "Escape") return;
+      if (e.type === "mousedown" && ref.current?.contains(e.target)) return;
+      setShowMenu(false);
+    };
+    document.addEventListener("mousedown", close);
+    document.addEventListener("keydown", close);
+    return () => {
+      document.removeEventListener("mousedown", close);
+      document.removeEventListener("keydown", close);
+    };
+  }, [showMenu]);
 
-    return () => unsubscribe();
-  }, []);
+  const confirmLeaveRoom = () =>
+    !inRoom ||
+    window.confirm(
+      "Leave this study room? Other participants will see you go offline shortly after."
+    );
 
   const handleLogin = async () => {
     try {
-      await signInWithPopup(
-        auth,
-        provider
-      );
+      await signInWithPopup(auth, provider);
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleLogout = async () => {
+    if (!confirmLeaveRoom()) return;
     await signOut(auth);
     setShowMenu(false);
   };
 
+  const handleMenuLink = (e, to) => {
+    if (!confirmLeaveRoom()) {
+      e.preventDefault();
+      return;
+    }
+    setShowMenu(false);
+    if (inRoom) {
+      e.preventDefault();
+      navigate(to);
+    }
+  };
+
   if (!user) {
     return (
-      <button
-        onClick={handleLogin}
-        style={{
-          border: "none",
-          padding: "10px 18px",
-          borderRadius: "12px",
-          background:
-            "linear-gradient(135deg,#6366f1,#8b5cf6)",
-          color: "white",
-          cursor: "pointer",
-          fontWeight: "600",
-        }}
-      >
-        Sign In
+      <button className="chip" onClick={handleLogin}>
+        Sign in
       </button>
     );
   }
 
   return (
-    <div
-      style={{
-        position: "relative",
-      }}
-    >
-      <div
-        onClick={() =>
-          setShowMenu(!showMenu)
-        }
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-          cursor: "pointer",
-          padding: "8px 12px",
-          borderRadius: "14px",
-          border:
-            "1px solid var(--border)",
-          background:
-            "var(--card-bg)",
-        }}
+    <span ref={ref} className="relative">
+      <button
+        className="av"
+        onClick={() => setShowMenu(!showMenu)}
+        aria-label="Account menu"
+        aria-expanded={showMenu}
       >
-        <img
-          src={
-            user.photoURL ||
-            `https://ui-avatars.com/api/?name=${encodeURIComponent(
-              user.displayName ||
-                "User"
-            )}`
-          }
-          alt="profile"
-          style={{
-            width: "40px",
-            height: "40px",
-            borderRadius: "50%",
-            objectFit: "cover",
-          }}
-        />
-
-        <span
-          style={{
-            color:
-              "var(--text)",
-            fontWeight: "600",
-          }}
-        >
-          {
-            user.displayName?.split(
-              " "
-            )[0]
-          }
-        </span>
-      </div>
+        {user.photoURL ? (
+          <img src={user.photoURL} alt="" referrerPolicy="no-referrer" />
+        ) : (
+          initials(user.displayName)
+        )}
+      </button>
 
       {showMenu && (
-        <div
-          style={{
-            position: "absolute",
-            top: "60px",
-            right: 0,
-            width: "240px",
-            background:
-              "var(--card-bg)",
-            border:
-              "1px solid var(--border)",
-            borderRadius: "16px",
-            padding: "12px",
-            boxShadow:
-              "0 15px 35px rgba(0,0,0,0.2)",
-            zIndex: 9999,
-          }}
-        >
-          <div
-            style={{
-              marginBottom: "10px",
-            }}
-          >
-            <div
-              style={{
-                fontWeight: "700",
-                color:
-                  "var(--text)",
-              }}
-            >
-              {
-                user.displayName
-              }
-            </div>
-
-            <div
-              style={{
-                fontSize: "12px",
-                opacity: 0.7,
-                color:
-                  "var(--text)",
-              }}
-            >
-              {user.email}
-            </div>
+        <div className="menu">
+          <div className="who">
+            <div style={{ fontWeight: 600 }}>{user.displayName}</div>
+            <div className="muted small">{user.email}</div>
           </div>
-
-          <hr />
-
-          <Link
-            to="/library"
-            style={menuLink}
-          >
-            📚 My Library
+          <Link to="/library?view=saved" onClick={(e) => handleMenuLink(e, "/library?view=saved")}>
+            My library
           </Link>
-
-          <button
-            style={menuBtn}
-          >
-            ⭐ My Ratings
-          </button>
-
-          <button
-            style={menuBtn}
-          >
-            👤 Profile
-          </button>
-
-          <hr />
-
-          <button
-            onClick={
-              handleLogout
-            }
-            style={{
-              ...menuBtn,
-              color:
-                "#ef4444",
-            }}
-          >
-            🚪 Logout
-          </button>
+          <Link to="/library?view=rated" onClick={(e) => handleMenuLink(e, "/library?view=rated")}>
+            My ratings
+          </Link>
+          <button onClick={handleLogout}>Log out</button>
         </div>
       )}
-    </div>
+    </span>
   );
 }
-
-const menuBtn = {
-  width: "100%",
-  textAlign: "left",
-  padding: "10px",
-  border: "none",
-  background: "transparent",
-  cursor: "pointer",
-  color: "var(--text)",
-  borderRadius: "8px",
-};
-
-const menuLink = {
-  display: "block",
-  width: "100%",
-  padding: "10px",
-  textDecoration: "none",
-  color: "var(--text)",
-};
 
 export default AuthButton;
