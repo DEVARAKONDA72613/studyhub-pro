@@ -1,0 +1,642 @@
+/* =========================================================
+   STUDYHUB PRO — IMMERSIVE STUDY ROOM
+   ========================================================= */
+
+.sh-room-page {
+  --room-bg: #12100d;
+  --room-panel: rgba(31, 25, 19, 0.88);
+  --room-panel-2: rgba(45, 35, 25, 0.72);
+  --room-paper: #eee3ce;
+  --room-muted: #9e917d;
+  --room-gold: #d7b27a;
+  --room-line: rgba(238, 227, 206, 0.14);
+  --room-green: #74a27f;
+  --room-red: #df725d;
+
+  min-height: 100svh;
+  color: var(--room-paper);
+  background:
+    radial-gradient(circle at 78% 15%, rgba(197, 143, 79, 0.12), transparent 26%),
+    radial-gradient(circle at 20% 70%, rgba(153, 107, 62, 0.07), transparent 28%),
+    var(--room-bg);
+  overflow-x: hidden;
+  position: relative;
+  isolation: isolate;
+}
+
+.sh-room-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(0,0,0,0.38), transparent 28%, transparent 72%, rgba(0,0,0,0.4));
+}
+
+.sh-room-page::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: radial-gradient(rgba(255,243,220,0.5) 0.42px, transparent 0.42px);
+  background-size: 5px 5px;
+}
+
+.sh-room-top {
+  width: min(1500px, 100%);
+  margin: 0 auto;
+  padding: 20px clamp(20px, 4vw, 58px) 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid rgba(238, 227, 206, 0.1);
+}
+
+.sh-room-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: Georgia, var(--font-display), serif;
+  font-size: 20px;
+  letter-spacing: -0.025em;
+}
+
+.sh-room-brand-mark {
+  width: 25px;
+  height: 25px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(215, 178, 122, 0.5);
+  border-radius: 50%;
+  color: var(--room-gold);
+  font-family: var(--font-sans), sans-serif;
+  font-size: 11px;
+}
+
+.sh-room-brand i {
+  margin-left: 2px;
+  color: var(--room-gold);
+  font-size: 0.65em;
+  font-style: italic;
+}
+
+.sh-room-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sh-room-actions .btn,
+.sh-room-actions .chip {
+  background: rgba(238, 227, 206, 0.05);
+  color: var(--room-paper);
+  border-color: rgba(238, 227, 206, 0.22);
+  box-shadow: none;
+}
+
+.sh-room-actions .btn:hover,
+.sh-room-actions .chip:hover {
+  background: rgba(238, 227, 206, 0.1);
+}
+
+.sh-room-actions .av {
+  background: var(--room-paper);
+  color: var(--room-bg);
+}
+
+.sh-room-scene {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(850px, 60vw);
+  height: 650px;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.9;
+}
+
+.sh-room-window {
+  position: absolute;
+  inset: 25px -80px 20px 70px;
+  border: 1px solid rgba(231, 200, 155, 0.12);
+  border-radius: 28px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(212,166,104,0.18), rgba(86,61,39,0.1) 55%, rgba(12,10,8,0.55));
+  box-shadow: inset 0 0 80px rgba(255,219,171,0.08);
+}
+
+.sh-room-window::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 49.7%, rgba(239,215,178,0.1) 50%, transparent 50.3%),
+    linear-gradient(180deg, transparent 49.7%, rgba(239,215,178,0.09) 50%, transparent 50.3%);
+}
+
+.sh-room-sun {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  top: 80px;
+  right: 21%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,224,177,0.8), rgba(215,159,95,0.18) 58%, transparent 73%);
+  filter: blur(1px);
+}
+
+.sh-room-mountain {
+  position: absolute;
+  left: -5%;
+  bottom: 19%;
+  width: 110%;
+  height: 47%;
+  background: #403528;
+  clip-path: polygon(0 77%, 11% 56%, 17% 68%, 28% 34%, 39% 62%, 48% 40%, 59% 70%, 67% 46%, 77% 65%, 88% 35%, 100% 62%, 100% 100%, 0 100%);
+  opacity: 0.54;
+}
+
+.sh-room-mountain.back {
+  bottom: 20%;
+  opacity: 0.28;
+  transform: scale(1.1);
+}
+
+.sh-room-window-floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 24%;
+  background: linear-gradient(180deg, rgba(28,23,17,0), rgba(9,8,6,0.72));
+}
+
+.sh-room-desk {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 20%;
+  background: linear-gradient(180deg, rgba(63,43,26,0.5), rgba(16,12,8,0.94));
+  border-top: 1px solid rgba(220,181,122,0.12);
+}
+
+.sh-room-main {
+  position: relative;
+  z-index: 10;
+  width: min(1380px, 100%);
+  margin: 0 auto;
+  padding: clamp(30px, 5vw, 62px) clamp(20px, 4vw, 52px) 80px;
+}
+
+.sh-room-heading {
+  max-width: 760px;
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  align-items: flex-end;
+  margin-bottom: 30px;
+}
+
+.sh-room-meta {
+  margin-bottom: 11px;
+  font-family: var(--font-mono), monospace;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--room-muted);
+}
+
+.sh-room-heading h1 {
+  margin: 0;
+  font-family: Georgia, var(--font-display), serif;
+  font-weight: 400;
+  font-size: clamp(40px, 6vw, 75px);
+  line-height: 0.94;
+  letter-spacing: -0.05em;
+}
+
+.sh-room-subtitle {
+  margin-top: 13px;
+  font-size: 13px;
+  color: var(--room-muted);
+}
+
+.sh-room-heading-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+.sh-room-heading-buttons .btn {
+  background: transparent;
+  color: var(--room-paper);
+  border: 1px solid rgba(238, 227, 206, 0.24);
+  box-shadow: none;
+}
+
+.sh-room-heading-buttons .btn-danger {
+  color: var(--room-red);
+  border-color: rgba(223, 114, 93, 0.45);
+}
+
+.sh-room-heading-buttons .btn-danger.armed {
+  color: #fff;
+  background: var(--room-red);
+  border-color: var(--room-red);
+}
+
+.sh-room-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 22px;
+  padding: 7px 11px;
+  border: 1px solid rgba(238, 227, 206, 0.14);
+  border-radius: 999px;
+  background: rgba(238, 227, 206, 0.04);
+  font-family: var(--font-mono), monospace;
+  font-size: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--room-muted);
+}
+
+.sh-room-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--room-green);
+  box-shadow: 0 0 13px rgba(116, 162, 127, 0.55);
+}
+
+.sh-room-grid {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.7fr) minmax(340px, 1.15fr) minmax(260px, 0.78fr);
+  overflow: hidden;
+  border: 1px solid rgba(238, 227, 206, 0.14);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(42,34,26,0.85), rgba(20,16,12,0.95));
+  box-shadow: 0 32px 80px rgba(0,0,0,0.28), inset 0 0 70px rgba(241,207,158,0.025);
+  backdrop-filter: blur(16px);
+}
+
+.sh-room-grid .cell {
+  position: relative;
+  min-width: 0;
+  padding: clamp(17px, 2.4vw, 27px);
+  border-right: 1px solid rgba(238, 227, 206, 0.1);
+  background: linear-gradient(180deg, rgba(255,255,255,0.018), transparent);
+}
+
+.sh-room-grid .cell:last-child {
+  border-right: 0;
+}
+
+.sh-room-grid .panel-h {
+  margin-bottom: 16px;
+  color: var(--room-muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sh-room-grid .ppl-row {
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(238, 227, 206, 0.09);
+}
+
+.sh-room-grid .ppl-name {
+  color: var(--room-paper);
+}
+
+.sh-room-grid .ppl-name b {
+  font-family: Georgia, var(--font-display), serif;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.sh-room-grid .dot {
+  width: 7px;
+  height: 7px;
+  background: var(--room-green);
+}
+
+.sh-room-grid .muted,
+.sh-room-grid .small {
+  color: var(--room-muted);
+}
+
+.sh-room-grid .chip {
+  color: var(--room-paper);
+  background: rgba(238, 227, 206, 0.04);
+  border-color: rgba(238, 227, 206, 0.2);
+}
+
+.sh-room-grid .clock {
+  min-height: 135px;
+  color: var(--room-paper);
+  font-size: clamp(55px, 6vw, 84px);
+  text-shadow: 0 5px 25px rgba(0,0,0,0.2);
+}
+
+.sh-room-grid .col {
+  color: var(--room-gold);
+}
+
+.sh-room-grid .modes {
+  margin-bottom: 13px;
+}
+
+.sh-room-grid .warn {
+  color: var(--room-red);
+  background: rgba(223, 114, 93, 0.06);
+  border-color: rgba(223,114,93,0.28);
+}
+
+.sh-room-grid .btn {
+  background: var(--room-paper);
+  color: var(--room-bg);
+  box-shadow: none;
+}
+
+.sh-room-grid .btn-alt {
+  background: transparent;
+  color: var(--room-paper);
+  border: 1px solid rgba(238,227,206,0.24);
+}
+
+.sh-room-grid .input {
+  color: var(--room-paper);
+  background: rgba(238, 227, 206, 0.035);
+  border: 1px solid rgba(238, 227, 206, 0.17);
+}
+
+.sh-room-grid .input:focus {
+  box-shadow: 0 0 0 2px rgba(215,178,122,0.13);
+}
+
+.sh-room-grid .label {
+  color: var(--room-muted);
+}
+
+.sh-room-grid .msgs {
+  height: 235px;
+  padding-right: 4px;
+  scrollbar-width: thin;
+}
+
+.sh-room-grid .m {
+  color: var(--room-paper);
+  background: rgba(238,227,206,0.045);
+  border: 1px solid rgba(238,227,206,0.1);
+  border-radius: 10px;
+}
+
+.sh-room-grid .m b {
+  color: var(--room-muted);
+}
+
+.sh-room-grid .m.me {
+  color: #201a12;
+  background: var(--room-gold-light, #e6c695);
+  border-color: transparent;
+}
+
+.sh-room-grid .cf button {
+  background: var(--room-paper);
+  color: var(--room-bg);
+  border-radius: 8px;
+}
+
+.sh-room-page .panel {
+  margin-top: 24px;
+  border: 1px solid rgba(238, 227, 206, 0.12);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(40,31,23,0.8), rgba(20,16,12,0.9));
+  color: var(--room-paper);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.17);
+  backdrop-filter: blur(13px);
+}
+
+.sh-room-page .panel .muted {
+  color: var(--room-muted);
+}
+
+.sh-room-page .panel .input {
+  color: var(--room-paper);
+  background: rgba(238, 227, 206, 0.04);
+  border-color: rgba(238, 227, 206, 0.14);
+}
+
+.sh-room-page .qa .chip {
+  color: var(--room-paper);
+  background: rgba(238,227,206,0.04);
+  border-color: rgba(238,227,206,0.18);
+}
+
+.sh-room-page .jitsi {
+  border: 1px solid rgba(238,227,206,0.13);
+  border-radius: 12px;
+}
+
+.sh-room-loading-card {
+  margin-top: 24px;
+  padding: 22px;
+  border: 1px solid rgba(238, 227, 206, 0.12);
+  border-radius: 16px;
+  background: rgba(29, 23, 17, 0.72);
+  color: var(--room-muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sh-room-error {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+}
+
+.sh-room-error-card {
+  width: min(500px, 100%);
+  padding: 38px;
+  border: 1px solid rgba(238,227,206,0.12);
+  border-radius: 18px;
+  background: rgba(29,23,17,0.88);
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+}
+
+.sh-room-error-card h3 {
+  font-family: Georgia, var(--font-display), serif;
+  font-size: 32px;
+  font-weight: 400;
+  margin-bottom: 9px;
+}
+
+.sh-room-error-card p {
+  color: var(--room-muted);
+  font-size: 13px;
+}
+
+.sh-room-error-card .sh-room-error-auth {
+  margin-top: 25px;
+}
+
+@media (max-width: 1050px) {
+  .sh-room-main {
+    padding-top: 38px;
+  }
+
+  .sh-room-heading {
+    display: block;
+  }
+
+  .sh-room-heading-buttons {
+    justify-content: flex-start;
+    margin-top: 18px;
+  }
+
+  .sh-room-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sh-room-grid .cell {
+    border-right: 0;
+    border-bottom: 1px solid rgba(238,227,206,0.1);
+  }
+
+  .sh-room-grid .cell:last-child {
+    border-bottom: 0;
+  }
+
+  .sh-room-scene {
+    width: 78vw;
+    opacity: 0.55;
+  }
+}
+
+@media (max-width: 650px) {
+  .sh-room-top {
+    padding: 15px 17px 11px;
+  }
+
+  .sh-room-brand {
+    font-size: 17px;
+  }
+
+  .sh-room-brand-mark {
+    width: 23px;
+    height: 23px;
+  }
+
+  .sh-room-actions .hide-room-mobile {
+    display: none;
+  }
+
+  .sh-room-main {
+    padding: 29px 17px 65px;
+  }
+
+  .sh-room-heading h1 {
+    font-size: clamp(38px, 12vw, 55px);
+  }
+
+  .sh-room-subtitle {
+    font-size: 11px;
+    line-height: 1.55;
+  }
+
+  .sh-room-heading-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .sh-room-heading-buttons .btn {
+    width: 100%;
+  }
+
+  .sh-room-status {
+    margin-bottom: 15px;
+  }
+
+  .sh-room-grid {
+    border-radius: 13px;
+  }
+
+  .sh-room-grid .cell {
+    padding: 18px;
+  }
+
+  .sh-room-grid .clock {
+    min-height: 100px;
+    font-size: clamp(48px, 15vw, 70px);
+  }
+
+  .sh-room-grid .msgs {
+    height: 200px;
+  }
+
+  .sh-room-page .panel {
+    padding: 17px;
+    border-radius: 13px;
+  }
+
+  .sh-room-scene {
+    width: 110vw;
+    height: 500px;
+    right: -40vw;
+    opacity: 0.35;
+  }
+
+  .sh-room-window {
+    inset: 10px -130px 30px 40px;
+  }
+
+  .sh-room-desk {
+    height: 25%;
+  }
+
+  .sh-room-error-card {
+    padding: 28px 20px;
+  }
+}
+
+@media (max-width: 390px) {
+  .sh-room-main {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .sh-room-heading h1 {
+    font-size: 36px;
+  }
+
+  .sh-room-heading-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .sh-room-grid .cell {
+    padding: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sh-room-page *,
+  .sh-room-page *::before,
+  .sh-room-page *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

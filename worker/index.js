@@ -36,7 +36,13 @@ function buildSystemPrompt(context) {
     (room.subject ? `, focused on the subject "${room.subject}"` : "") +
     (room.topic ? ` and specifically the topic "${room.topic}"` : "") +
     ". Use this context to interpret the student's question even if they don't restate it. " +
-    "Stay strictly focused on education and studying. Keep answers clear, encouraging, and appropriately concise for a chat panel."
+    "Stay strictly focused on education and studying. Keep answers clear, encouraging, and appropriately concise for a chat panel.\n\n" +
+    "Formatting rules: write like a knowledgeable tutor chatting with a student, not a reference manual. " +
+    "Default to short paragraphs and markdown bullet/numbered lists for structure. Use **bold** sparingly, " +
+    "only for genuinely key terms. Only use a markdown table when the content is truly tabular (e.g. comparing " +
+    "2-4 short items on 2-3 attributes) — never as the default format for an explanation. Never put raw HTML " +
+    "tags like <br> inside your response; use plain markdown line breaks (a blank line) instead. Keep table " +
+    "cells to a few words, not full sentences."
   );
 }
 

@@ -21,6 +21,26 @@ function formatTime(ts) {
   return new Date(ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
+const markdownComponents = {
+  a: ({ children, href }) => (
+    <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "underline" }}>
+      {children}
+    </a>
+  ),
+  table: ({ children }) => (
+    <div style={{ overflowX: "auto", margin: "0 0 8px" }}>
+      <table style={{ borderCollapse: "collapse", width: "100%", fontSize: "12.5px" }}>{children}</table>
+    </div>
+  ),
+  thead: ({ children }) => <thead>{children}</thead>,
+  tbody: ({ children }) => <tbody>{children}</tbody>,
+  tr: ({ children }) => <tr style={{ borderBottom: "1px solid rgba(127,127,127,0.25)" }}>{children}</tr>,
+  th: ({ children }) => (
+    <th style={{ textAlign: "left", padding: "6px 10px", fontWeight: "600", whiteSpace: "nowrap" }}>{children}</th>
+  ),
+  td: ({ children }) => <td style={{ padding: "6px 10px", verticalAlign: "top" }}>{children}</td>,
+};
+
 function AIAssistantPanel({ roomId, context }) {
   const { user } = useAuth();
   const [messages, setMessages] = useState([]);
@@ -136,7 +156,7 @@ function AIAssistantPanel({ roomId, context }) {
             </b>
             {msg.role === "assistant" ? (
               <div className="md">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.text}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{msg.text}</ReactMarkdown>
               </div>
             ) : (
               msg.text

@@ -1,0 +1,495 @@
+/* =========================================================
+   STUDYHUB PRO — STUDY ROOMS DIRECTORY
+   ========================================================= */
+
+.sh-rooms-page {
+  min-height: 100svh;
+
+  background:
+    radial-gradient(
+      circle at 80% 12%,
+      rgba(210, 169, 105, 0.12),
+      transparent 25%
+    ),
+    var(--paper);
+
+  color: var(--ink);
+
+  overflow-x: hidden;
+}
+
+.sh-rooms-main {
+  width: min(1260px, 100%);
+
+  margin: 0 auto;
+
+  padding:
+    clamp(35px, 6vw, 78px)
+    clamp(17px, 4vw, 38px)
+    90px;
+}
+
+.sh-rooms-intro {
+  display: flex;
+
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  padding-bottom: 35px;
+
+  border-bottom:
+    1px solid var(--ink);
+}
+
+.sh-rooms-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 12px;
+
+  font-family: var(--font-mono), monospace;
+  font-size: 8px;
+
+  letter-spacing: 0.13em;
+
+  text-transform: uppercase;
+
+  color: var(--ink2);
+}
+
+.sh-rooms-eyebrow::before {
+  content: "";
+
+  width: 32px;
+  height: 1px;
+
+  background: var(--sig);
+}
+
+.sh-rooms-intro h1 {
+  font-family: Georgia, var(--font-display), serif;
+
+  font-size: clamp(43px, 6vw, 78px);
+
+  font-weight: 400;
+
+  line-height: 0.93;
+
+  letter-spacing: -0.055em;
+}
+
+.sh-rooms-intro h1 em {
+  font-style: italic;
+
+  color: var(--sig);
+}
+
+.sh-rooms-description {
+  max-width: 520px;
+
+  margin-top: 20px;
+
+  font-size: 14px;
+  line-height: 1.65;
+
+  color: var(--ink2);
+}
+
+.sh-rooms-create {
+  flex: none;
+}
+
+.sh-rooms-create .btn {
+  min-height: 45px;
+}
+
+.sh-rooms-controls {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.2fr)
+    minmax(300px, 0.8fr);
+
+  gap: 12px;
+
+  margin:
+    28px
+    0
+    18px;
+}
+
+.sh-room-field {
+  position: relative;
+}
+
+.sh-room-field label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-family: var(--font-mono), monospace;
+  font-size: 7px;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+
+  color: var(--ink2);
+}
+
+.sh-room-input {
+  width: 100%;
+
+  min-height: 46px;
+
+  padding: 11px 13px;
+
+  border:
+    1px solid var(--ink);
+
+  border-radius: 0;
+
+  background: rgba(255, 255, 255, 0.18);
+
+  color: var(--ink);
+
+  outline: none;
+
+  font-size: 13px;
+
+  transition:
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.sh-room-input:focus {
+  background: var(--paper);
+
+  box-shadow:
+    5px 5px 0 var(--hl);
+}
+
+.sh-room-code {
+  display: flex;
+
+  gap: 8px;
+}
+
+.sh-room-code .sh-room-input {
+  min-width: 0;
+}
+
+.sh-room-code button {
+  flex: none;
+}
+
+.sh-rooms-filterbar {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
+
+  margin-bottom: 23px;
+}
+
+.sh-room-filter {
+  padding: 7px 11px;
+
+  border:
+    1px solid var(--rule);
+
+  background: transparent;
+
+  font-family: var(--font-mono), monospace;
+  font-size: 8px;
+
+  color: var(--ink2);
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.sh-room-filter:hover,
+.sh-room-filter.active {
+  border-color: var(--ink);
+
+  background: var(--ink);
+
+  color: var(--paper);
+}
+
+.sh-rooms-list {
+  border-top:
+    1px solid var(--ink);
+}
+
+.sh-room-card {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.3fr)
+    minmax(150px, 0.8fr)
+    auto
+    auto;
+
+  align-items: center;
+
+  gap: 18px;
+
+  padding:
+    21px
+    10px;
+
+  border-bottom:
+    1px solid var(--rule);
+
+  transition:
+    background 0.22s ease,
+    padding 0.22s ease,
+    transform 0.22s ease;
+}
+
+.sh-room-card:hover {
+  padding-left: 18px;
+  padding-right: 18px;
+
+  background: var(--paper2);
+}
+
+.sh-room-main {
+  min-width: 0;
+}
+
+.sh-room-card h2 {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  font-family: Georgia, var(--font-display), serif;
+
+  font-size: 22px;
+
+  font-weight: 400;
+
+  letter-spacing: -0.025em;
+}
+
+.sh-room-host {
+  margin-top: 4px;
+
+  font-size: 10px;
+
+  color: var(--ink2);
+}
+
+.sh-room-topic {
+  min-width: 0;
+}
+
+.sh-room-subject {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sh-room-topic-name {
+  margin-top: 3px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  font-size: 10px;
+
+  color: var(--ink2);
+}
+
+.sh-room-seats {
+  display: flex;
+
+  gap: 4px;
+}
+
+.sh-room-seat {
+  width: 10px;
+  height: 10px;
+
+  border:
+    1px solid var(--ink);
+}
+
+.sh-room-seat.filled {
+  background: var(--ink);
+}
+
+.sh-room-seat.full {
+  background: var(--sig);
+
+  border-color: var(--sig);
+}
+
+.sh-room-join {
+  min-width: 83px;
+}
+
+.sh-rooms-empty {
+  margin-top: 24px;
+
+  padding: 66px 24px;
+
+  border:
+    1px dashed var(--rule);
+
+  text-align: center;
+
+  color: var(--ink2);
+}
+
+.sh-rooms-empty h2 {
+  margin-bottom: 6px;
+
+  color: var(--ink);
+
+  font-family: Georgia, var(--font-display), serif;
+
+  font-size: 30px;
+
+  font-weight: 400;
+}
+
+.sh-rooms-empty .btn {
+  margin-top: 18px;
+}
+
+@media (max-width: 900px) {
+  .sh-rooms-intro {
+    display: block;
+  }
+
+  .sh-rooms-create {
+    margin-top: 22px;
+  }
+
+  .sh-rooms-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .sh-room-card {
+    grid-template-columns:
+      minmax(0, 1fr)
+      auto;
+
+    gap: 8px 15px;
+  }
+
+  .sh-room-topic {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+
+  .sh-room-seats {
+    justify-content: flex-end;
+  }
+
+  .sh-room-join {
+    justify-self: end;
+  }
+}
+
+@media (max-width: 600px) {
+  .sh-rooms-main {
+    padding:
+      32px
+      17px
+      60px;
+  }
+
+  .sh-rooms-intro h1 {
+    font-size: clamp(39px, 12vw, 55px);
+  }
+
+  .sh-rooms-description {
+    font-size: 13px;
+  }
+
+  .sh-rooms-create .btn {
+    width: 100%;
+  }
+
+  .sh-room-code {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+
+  .sh-room-card {
+    grid-template-columns: 1fr auto;
+
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+
+  .sh-room-card:hover {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .sh-room-card h2 {
+    font-size: 19px;
+  }
+
+  .sh-room-topic-name {
+    white-space: normal;
+    line-height: 1.4;
+  }
+
+  .sh-room-join {
+    min-width: 76px;
+  }
+}
+
+@media (max-width: 390px) {
+  .sh-rooms-main {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .sh-room-code {
+    grid-template-columns: 1fr;
+  }
+
+  .sh-room-code button {
+    width: 100%;
+  }
+
+  .sh-room-card {
+    grid-template-columns: 1fr;
+  }
+
+  .sh-room-seats {
+    justify-content: flex-start;
+  }
+
+  .sh-room-join {
+    justify-self: stretch;
+
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sh-room-card,
+  .sh-room-input,
+  .sh-room-filter {
+    transition: none !important;
+  }
+}

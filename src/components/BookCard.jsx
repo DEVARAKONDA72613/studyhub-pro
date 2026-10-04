@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import SignInModal from "./SignInModal";
 
 function BookCard({ book }) {
+  const { user } = useAuth();
+  const [gateMessage, setGateMessage] = useState("");
+  const [showGate, setShowGate] = useState(false);
   const [views, setViews] = useState(book.views || 0);
   const [downloads, setDownloads] = useState(book.downloads || 0);
   const [progress, setProgress] = useState(0);
@@ -23,6 +28,12 @@ function BookCard({ book }) {
   }, [book.id, book.views, book.downloads]);
 
   const handleView = () => {
+    if (!user) {
+      setGateMessage("Sign in to view this note.");
+      setShowGate(true);
+      return;
+    }
+
     const newViews = views + 1;
     const newProgress = Math.min(progress + 10, 100);
 
@@ -43,6 +54,12 @@ function BookCard({ book }) {
   };
 
   const handleSave = () => {
+    if (!user) {
+      setGateMessage("Sign in to save notes to your library.");
+      setShowGate(true);
+      return;
+    }
+
     const library = JSON.parse(localStorage.getItem("library")) || [];
 
     if (library.includes(book.id)) {
@@ -135,6 +152,8 @@ function BookCard({ book }) {
           </ul>
         </div>
       )}
+
+      <SignInModal open={showGate} message={gateMessage} onClose={() => setShowGate(false)} />
     </article>
   );
 }

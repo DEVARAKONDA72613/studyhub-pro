@@ -1,108 +1,97 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-import Navbar from "../components/Navbar";
-import Hero from "../components/Hero";
-import RoomTicker from "../components/RoomTicker";
-import SearchBar from "../components/SearchBar";
-import StatsCard from "../components/StatsCard";
-import PopularCategories from "../components/PopularCategories";
-import Footer from "../components/Footer";
-import BookCard from "../components/BookCard";
-import { useAuth } from "../context/AuthContext";
-import { subscribeToPublicRooms } from "../utils/firestoreRooms";
-import { books } from "../data/books";
+import InteractiveBook from "../components/InteractiveBook";
+import DeferredAuth from "../components/DeferredAuth";
 
-const trendingTags = ["DSA", "DBMS", "Java", "Web Development", "OOP"];
+import "../styles/home.css";
 
 function Home() {
-  const { user, loading } = useAuth();
-  const [search, setSearch] = useState("");
-  const [rooms, setRooms] = useState([]);
-
-  // One shared subscription feeds both the ticker and the hero's featured room.
   useEffect(() => {
-    if (loading || !user) {
-      setRooms([]);
-      return;
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark");
     }
-    const unsubscribe = subscribeToPublicRooms(setRooms);
-    return () => unsubscribe();
-  }, [user, loading]);
-
-  const categories = [...new Set(books.map((book) => book.category))];
-  const totalDownloads = books.reduce((sum, book) => sum + book.downloads, 0);
-
-  const query = search.trim().toLowerCase();
-  const filteredBooks = books.filter(
-    (book) => book.title.toLowerCase().includes(query) || book.category.toLowerCase().includes(query)
-  );
+  }, []);
 
   return (
-    <>
-      <Navbar />
-      <RoomTicker rooms={rooms} user={user} />
+    <div className="sh-home">
+      <a href="#main-content" className="skip-link">
+        Skip to content
+      </a>
 
-      <main id="main-content" className="wrap page">
-        <Hero rooms={rooms} user={user} />
+      <header className="sh-home-header">
+        <div className="sh-wordmark">
+          <span className="sh-wordmark-mark">△</span>
+          <span>
+            StudyHub
+            <i>Pro</i>
+          </span>
+        </div>
 
-        <SearchBar search={search} setSearch={setSearch} />
+        <div className="sh-home-tools">
+          <span className="sh-edition">Vol. 01 · Digital study edition</span>
+          <DeferredAuth />
+        </div>
+      </header>
 
-        {query === "" ? (
-          <>
-            <div className="sec">
-              <span className="sec-n mono">§ 01</span>
-              <h2>Trending searches</h2>
-            </div>
-            <div className="chips">
-              {trendingTags.map((tag) => (
-                <button key={tag} className="chip" onClick={() => setSearch(tag)}>
-                  {tag}
-                </button>
-              ))}
-            </div>
+      <main id="main-content">
+        <section className="sh-home-main">
+          <div className="sh-home-copy">
+            <div className="sh-eyebrow">The quiet side of studying</div>
 
-            <div className="sec">
-              <span className="sec-n mono">§ 02</span>
-              <h2>The library</h2>
-            </div>
-            <PopularCategories />
+            <p className="sh-welcome">Welcome to StudyHub Pro.</p>
 
-            <div className="sec">
-              <span className="sec-n mono">§ 03</span>
-              <h2>By the numbers</h2>
-            </div>
-            <div className="stats">
-              <StatsCard title="TOTAL NOTES" value={books.length} />
-              <StatsCard title="CATEGORIES" value={categories.length} />
-              <StatsCard title="DOWNLOADS" value={totalDownloads} />
-              <StatsCard title="HIGHEST RATED" value="5.0" />
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="sec">
-              <span className="sec-n mono">§</span>
-              <h2>Search results</h2>
+            <h1>
+              A space to
+              <br />
+              <em>study,</em> grow
+              <br />
+              and achieve more.
+            </h1>
+
+            <p className="sh-home-description">
+              Notes, resources and focused rooms for people who want to learn without the noise.
+            </p>
+
+            <div className="sh-copy-rule" />
+
+            <div className="sh-instruction">
+              <span className="sh-instruction-index">01</span>
+              <span className="sh-instruction-text">Open the book to begin</span>
             </div>
 
-            {filteredBooks.length === 0 ? (
-              <div className="empty">
-                <h3>No notes found</h3>
-                <p>Try another keyword.</p>
+            <div className="sh-feature-line">
+              <span>Study rooms</span>
+              <span>Shared notes</span>
+              <span>Live chat</span>
+              <span>AI tutor</span>
+            </div>
+          </div>
+
+          <div className="sh-home-book-zone">
+            <div className="sh-scene" aria-hidden="true">
+              <div className="sh-window">
+                <span className="sh-sun" />
+                <span className="sh-mountain sh-mountain-back" />
+                <span className="sh-mountain" />
+                <span className="sh-window-floor" />
               </div>
-            ) : (
-              <div className="books">
-                {filteredBooks.map((book) => (
-                  <BookCard key={book.id} book={book} />
-                ))}
-              </div>
-            )}
-          </>
-        )}
+
+              <span className="sh-room-glow" />
+              <span className="sh-desk" />
+              <span className="sh-table-lamp" />
+            </div>
+
+            <InteractiveBook />
+          </div>
+        </section>
       </main>
 
-      <Footer />
-    </>
+      <footer className="sh-home-footer">
+        <span>StudyHub Pro</span>
+        <span>Study quietly · build consistently</span>
+        <span>Digital Study Edition · 01</span>
+      </footer>
+    </div>
   );
 }
 
