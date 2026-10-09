@@ -188,7 +188,7 @@
 
   border-radius: 0;
 
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.05);
 
   color: var(--ink);
 
@@ -257,18 +257,16 @@
 
   overflow: hidden;
 
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.4),
-      rgba(225, 214, 193, 0.64)
-    );
+  background: linear-gradient(150deg, rgba(42, 34, 26, 0.78), rgba(20, 16, 12, 0.9));
 
-  border:
-    1px solid var(--rule);
+  border: 1px solid rgba(238, 227, 206, 0.14);
+  border-radius: 18px;
+
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28), inset 0 0 50px rgba(241, 207, 158, 0.03);
 
   transition:
     transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.28s ease,
     box-shadow 0.28s ease;
 }
 
@@ -288,7 +286,7 @@
   background:
     radial-gradient(
       circle,
-      rgba(255, 255, 255, 0.45),
+      rgba(242, 211, 155, 0.12),
       transparent 70%
     );
 
@@ -298,8 +296,9 @@
 .sh-library-card:hover {
   transform: translateY(-7px);
 
-  box-shadow:
-    8px 11px 0 rgba(22, 19, 14, 0.1);
+  border-color: rgba(212, 173, 114, 0.45);
+
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.34), 0 0 34px rgba(242, 211, 155, 0.12);
 }
 
 .sh-library-card-top {
@@ -327,11 +326,10 @@
 
   overflow: hidden;
 
-  border:
-    1px solid rgba(22, 19, 14, 0.32);
+  border: 1px solid rgba(22, 19, 14, 0.32);
+  border-radius: 4px;
 
-  box-shadow:
-    4px 5px 0 rgba(22, 19, 14, 0.09);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.5);
 }
 
 .sh-library-cover::after {
@@ -357,13 +355,15 @@
 
   border:
     1px solid var(--rule);
+  border-color: rgba(212, 173, 114, 0.3);
+  border-radius: 6px;
 
-  background: rgba(242, 236, 223, 0.48);
+  background: rgba(212, 173, 114, 0.12);
 
   font-family: var(--font-mono), monospace;
   font-size: 7px;
 
-  color: var(--ink2);
+  color: var(--sig);
 
   text-transform: uppercase;
 
