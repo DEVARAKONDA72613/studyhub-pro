@@ -7,6 +7,7 @@ import RoomChat from "../components/RoomChat";
 import StudyTimer from "../components/StudyTimer";
 import SharedNotes from "../components/SharedNotes";
 import NotificationPrompt from "../components/NotificationPrompt";
+import RoomDock from "../components/RoomDock";
 
 import { useAuth } from "../context/AuthContext";
 
@@ -19,6 +20,11 @@ import {
   subscribeToParticipants,
   sendHeartbeat,
   cleanupStaleParticipants,
+  getPrivateRoomCode,
+  subscribeToJoinRequests,
+  approveJoinRequest,
+  rejectJoinRequest,
+  removeLegacyParticipantInviteHash,
 } from "../utils/firestoreRooms";
 
 import "../styles/study-room.css";
@@ -71,8 +77,17 @@ function StudyRoomPage() {
   const [status, setStatus] = useState("joining");
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [deleteError, setDeleteError] = useState("");
+  const [joinRequests, setJoinRequests] = useState([]);
+  const [joinRequestError, setJoinRequestError] = useState("");
+  const [joinRequestActionId, setJoinRequestActionId] = useState(null);
+  const [privateCodeState, setPrivateCodeState] = useState({
+    roomId: null,
+    userId: null,
+    code: "",
+  });
 
   const joinedOnceRef = useRef(false);
+  const isRoomOwner = room?.creatorId === user?.uid;
 
   useEffect(() => {
     if (loading || !user) return;
@@ -146,12 +161,59 @@ function StudyRoomPage() {
     const interval = setInterval(() => {
       cleanupStaleParticipants(
         roomId,
-        participants
+        participants,
+        user?.uid,
+        isRoomOwner
       ).catch(console.error);
     }, 25000);
 
     return () => clearInterval(interval);
-  }, [roomId, participants, status]);
+  }, [roomId, participants, status, user, isRoomOwner]);
+
+  useEffect(() => {
+    if (!isRoomOwner || room?.visibility !== "private") return;
+
+    getPrivateRoomCode(roomId)
+      .then((code) =>
+        setPrivateCodeState({
+          roomId,
+          userId: user.uid,
+          code: code || "",
+        })
+      )
+      .catch((error) => {
+        console.error("Private room code could not be loaded:", error);
+      });
+  }, [roomId, isRoomOwner, room?.visibility, user]);
+
+  useEffect(() => {
+    if (!user?.uid || !isRoomOwner || room?.visibility !== "private") {
+      return undefined;
+    }
+
+    return subscribeToJoinRequests(
+      roomId,
+      setJoinRequests,
+      (error) => {
+        console.error("Private-room join requests could not be loaded:", error);
+        setJoinRequestError("Unable to load pending requests. Check your connection and Firestore rules.");
+      }
+    );
+  }, [roomId, user?.uid, isRoomOwner, room?.visibility]);
+
+  useEffect(() => {
+    if (!isRoomOwner) return;
+
+    const legacyParticipants = participants.filter((participant) =>
+      Object.prototype.hasOwnProperty.call(participant, "inviteHash")
+    );
+
+    legacyParticipants.forEach((participant) => {
+      removeLegacyParticipantInviteHash(roomId, participant.id).catch((error) => {
+        console.error("Legacy participant invitation data could not be removed:", error);
+      });
+    });
+  }, [roomId, participants, isRoomOwner]);
 
   useEffect(() => {
     if (status !== "ready") return;
@@ -201,6 +263,34 @@ function StudyRoomPage() {
     }
 
     leaveRoom(roomId, targetId).catch(console.error);
+  };
+
+  const handleApproveJoinRequest = async (joinRequest) => {
+    setJoinRequestError("");
+    setJoinRequestActionId(joinRequest.id);
+
+    try {
+      await approveJoinRequest(roomId, joinRequest.id, user);
+    } catch (error) {
+      console.error("Join request approval failed:", error);
+      setJoinRequestError(error.message || "Unable to approve this request.");
+    } finally {
+      setJoinRequestActionId(null);
+    }
+  };
+
+  const handleRejectJoinRequest = async (joinRequest) => {
+    setJoinRequestError("");
+    setJoinRequestActionId(joinRequest.id);
+
+    try {
+      await rejectJoinRequest(roomId, joinRequest.id, user);
+    } catch (error) {
+      console.error("Join request rejection failed:", error);
+      setJoinRequestError(error.message || "Unable to reject this request.");
+    } finally {
+      setJoinRequestActionId(null);
+    }
   };
 
   const handleDeleteRoom = async () => {
@@ -282,7 +372,11 @@ function StudyRoomPage() {
     return null;
   }
 
-  const isOwner = room.creatorId === user.uid;
+  const isOwner = isRoomOwner;
+  const privateRoomCode =
+    privateCodeState.roomId === roomId && privateCodeState.userId === user.uid
+      ? privateCodeState.code
+      : "";
 
   const participantsWithFlag = participants.map(
     (participant) => ({
@@ -354,12 +448,12 @@ function StudyRoomPage() {
               {room.subject} · {room.topic}
             </p>
 
-            {room.roomCode && (
+            {isOwner && privateRoomCode && (
               <p
                 className="sh-room-subtitle"
                 style={{ marginTop: 8 }}
               >
-                Room code: {room.roomCode}
+                Room code: {privateRoomCode}
               </p>
             )}
           </div>
@@ -407,6 +501,63 @@ function StudyRoomPage() {
         )}
 
         <NotificationPrompt />
+
+        <RoomDock />
+
+        {isOwner && room.visibility === "private" && (
+          <section className="cell" aria-label="Private room join requests" style={{ marginBottom: 18 }}>
+            <h2 className="panel-h">
+              Pending requests · {joinRequests.length}
+            </h2>
+
+            {joinRequestError && (
+              <p className="err" role="alert" style={{ marginBottom: 12 }}>
+                {joinRequestError}
+              </p>
+            )}
+
+            {joinRequests.length === 0 ? (
+              <p className="muted small">
+                No pending requests. Students who enter your room code will appear here for your approval.
+              </p>
+            ) : (
+              joinRequests.map((joinRequest) => (
+                <div
+                  key={joinRequest.id}
+                  className="ppl-row"
+                  style={{ gap: 12, flexWrap: "wrap" }}
+                >
+                  <div className="ppl-name" style={{ minWidth: 0 }}>
+                    <b>{joinRequest.requesterName || "Student"}</b>
+                    <span className="muted small" style={{ display: "block" }}>
+                      Requested access to this private room
+                    </span>
+                  </div>
+
+                  <span style={{ display: "flex", gap: 6, flex: "none" }}>
+                    <button
+                      type="button"
+                      className="chip"
+                      disabled={joinRequestActionId === joinRequest.id}
+                      onClick={() => handleApproveJoinRequest(joinRequest)}
+                    >
+                      {joinRequestActionId === joinRequest.id ? "Working..." : "Approve"}
+                    </button>
+                    <button
+                      type="button"
+                      className="chip"
+                      disabled={joinRequestActionId === joinRequest.id}
+                      onClick={() => handleRejectJoinRequest(joinRequest)}
+                      style={{ color: "var(--sig)", borderColor: "var(--sig)" }}
+                    >
+                      Reject
+                    </button>
+                  </span>
+                </div>
+              ))
+            )}
+          </section>
+        )}
 
         <div className="sh-room-grid">
           <ParticipantsPanel
